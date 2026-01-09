@@ -166,7 +166,8 @@ export default function BlackboardAI() {
       // Get the image data
       const imageData = canvas.toDataURL("image/png").split(",")[1]
 
-      const response = await fetch("/api/analyze", {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"
+      const response = await fetch(`${backendUrl}/api/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -206,12 +207,12 @@ export default function BlackboardAI() {
         <h1 className="text-2xl sm:text-4xl font-bold">ChalkX</h1>
 
         {/* Toolbar */}
-        <div className="w-full bg-gray-800 p-3 rounded-lg">
+        <div className="w-full bg-gray-800 p-3 rounded-2xl">
           <div className="flex flex-wrap gap-2 justify-center mb-2">
             <Button
               variant={tool === "pencil" ? "default" : "outline"}
               onClick={() => setTool("pencil")}
-              className="flex-1 min-w-[100px] max-w-[150px]"
+              className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
               size="sm"
             >
               <Pencil className="h-4 w-4 mr-1" />
@@ -221,7 +222,7 @@ export default function BlackboardAI() {
             <Button
               variant={tool === "eraser" ? "default" : "outline"}
               onClick={() => setTool("eraser")}
-              className="flex-1 min-w-[100px] max-w-[150px]"
+              className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
               size="sm"
             >
               <Eraser className="h-4 w-4 mr-1" />
@@ -233,14 +234,14 @@ export default function BlackboardAI() {
                 <Button
                   variant="outline"
                   style={{ backgroundColor: color, color: "#000000" }}
-                  className="flex-1 min-w-[100px] max-w-[150px]"
+                  className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
                   size="sm"
                 >
                   <Palette className="h-4 w-4 mr-1" />
                   Color
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-64">
+              <PopoverContent className="w-64 rounded-xl">
                 <div className="grid grid-cols-6 gap-2">
                   {[
                     "#FFFFFF",
@@ -267,12 +268,12 @@ export default function BlackboardAI() {
               </PopoverContent>
             </Popover>
 
-            <Button variant="outline" onClick={clearCanvas} className="flex-1 min-w-[100px] max-w-[150px]" size="sm">
+            <Button variant="outline" onClick={clearCanvas} className="flex-1 min-w-[100px] max-w-[150px] rounded-xl" size="sm">
               <Trash2 className="h-4 w-4 mr-1" />
               Clear
             </Button>
 
-            <Button variant="outline" onClick={downloadImage} className="flex-1 min-w-[100px] max-w-[150px]" size="sm">
+            <Button variant="outline" onClick={downloadImage} className="flex-1 min-w-[100px] max-w-[150px] rounded-xl" size="sm">
               <Download className="h-4 w-4 mr-1" />
               Save
             </Button>
@@ -297,7 +298,7 @@ export default function BlackboardAI() {
         <div className="w-full aspect-[4/3] max-w-3xl">
           <canvas
             ref={canvasRef}
-            className="w-full h-full border border-gray-600 rounded-lg cursor-crosshair touch-none"
+            className="w-full h-full border border-gray-600 rounded-3xl cursor-crosshair touch-none"
             onMouseDown={(e) => startDrawing(e.clientX, e.clientY)}
             onMouseUp={stopDrawing}
             onMouseOut={stopDrawing}
@@ -317,7 +318,7 @@ export default function BlackboardAI() {
           />
         </div>
 
-        <Button onClick={analyzeImage} className="w-full max-w-[200px] mt-4" size="lg" disabled={isAnalyzing}>
+        <Button onClick={analyzeImage} className="w-full max-w-[200px] mt-4 rounded-xl" size="lg" disabled={isAnalyzing}>
           <Send className="h-5 w-5 mr-2" />
           {isAnalyzing ? "Analyzing..." : "Analyze Drawing"}
         </Button>
@@ -329,7 +330,7 @@ export default function BlackboardAI() {
         )}
 
         {result && (
-          <div className="w-full p-4 bg-gray-800 rounded-lg mt-4">
+          <div className="w-full p-4 bg-gray-800 rounded-2xl mt-4">
             <h2 className="text-xl font-semibold mb-2">ChalkX:</h2>
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
