@@ -24,6 +24,7 @@ export default function BlackboardAI() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastPoint, setLastPoint] = useState<{ x: number; y: number } | null>(null)
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
 
   useEffect(() => {
     const initCanvas = () => {
@@ -138,6 +139,7 @@ export default function BlackboardAI() {
     }
     setResult(null)
     setError(null)
+    setTool("pencil")
   }
 
   const downloadImage = () => {
@@ -149,6 +151,12 @@ export default function BlackboardAI() {
       link.download = "blackboard.png"
       link.click()
     }
+    setTool("pencil")
+  }
+
+  const handleColorSelect = (selectedColor: string) => {
+    setColor(selectedColor)
+    setIsColorPickerOpen(false)
   }
 
   const analyzeImage = async () => {
@@ -202,47 +210,62 @@ export default function BlackboardAI() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 flex flex-col items-center" ref={containerRef}>
-      <div className="w-full max-w-3xl flex flex-col items-center gap-4">
-        <h1 className="text-2xl sm:text-4xl font-bold">ChalkX</h1>
+    <div className="min-h-screen text-white p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-x-hidden" style={{ backgroundColor: '#121212' }} ref={containerRef}>
+      <div className="w-full max-w-6xl flex flex-col items-center gap-3 xs:gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+        {/* Header */}
+        <div className="text-center mt-3 xs:mt-4 sm:mt-5 md:mt-6 lg:mt-8 w-full">
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-widest" style={{ color: '#FF9500' }}>
+            ChalkX
+          </h1>
+          <div className="w-8 xs:w-10 sm:w-12 md:w-14 lg:w-16 h-0.5 xs:h-1 bg-orange-500 mx-auto mt-2 xs:mt-3 md:mt-4"></div>
+        </div>
 
         {/* Toolbar */}
-        <div className="w-full bg-gray-800 p-3 rounded-2xl">
-          <div className="flex flex-wrap gap-2 justify-center mb-2">
+        <div className="w-full border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+          {/* Main Controls */}
+          <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-1 xs:gap-2 sm:gap-2 md:gap-3 lg:gap-4 mb-3 xs:mb-4 sm:mb-5 md:mb-6">
             <Button
-              variant={tool === "pencil" ? "default" : "outline"}
               onClick={() => setTool("pencil")}
-              className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
-              size="sm"
+              className={`h-auto flex flex-col items-center justify-center gap-0.5 xs:gap-1 sm:gap-1.5 relative ${
+                tool === "pencil" ? "btn-orange-solid" : "btn-orange-outline"
+              }`}
+              title="Pencil Tool"
             >
-              <Pencil className="h-4 w-4 mr-1" />
-              Pencil
+              <Pencil className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+              <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">PEN</span>
+              {tool === "pencil" && <div className="btn-active-indicator"></div>}
             </Button>
 
             <Button
-              variant={tool === "eraser" ? "default" : "outline"}
               onClick={() => setTool("eraser")}
-              className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
-              size="sm"
+              className={`h-auto flex flex-col items-center justify-center gap-0.5 xs:gap-1 sm:gap-1.5 relative ${
+                tool === "eraser" ? "btn-orange-solid" : "btn-orange-outline"
+              }`}
+              title="Eraser Tool"
             >
-              <Eraser className="h-4 w-4 mr-1" />
-              Eraser
+              <Eraser className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+              <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">ERASE</span>
+              {tool === "eraser" && <div className="btn-active-indicator"></div>}
             </Button>
 
-            <Popover>
+            <Popover open={isColorPickerOpen} onOpenChange={setIsColorPickerOpen}>
               <PopoverTrigger asChild>
                 <Button
-                  variant="outline"
-                  style={{ backgroundColor: color, color: "#000000" }}
-                  className="flex-1 min-w-[100px] max-w-[150px] rounded-xl"
-                  size="sm"
+                  className="h-auto flex flex-col items-center justify-center gap-0.5 xs:gap-1 sm:gap-1.5 relative btn-calc"
+                  style={{
+                    borderColor: "#FF9500",
+                    backgroundColor: color,
+                    color: color === "#FFFFFF" || color === "#FFFF00" || color === "#FFC0CB" ? "#000000" : "#FFFFFF",
+                    boxShadow: "0 6px 0 0 rgba(0, 0, 0, 0.9), 0 6px 20px rgba(0, 0, 0, 0.6)",
+                  }}
+                  title="Color Picker"
                 >
-                  <Palette className="h-4 w-4 mr-1" />
-                  Color
+                  <Palette className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+                  <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">COLOR</span>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 rounded-xl">
-                <div className="grid grid-cols-6 gap-2">
+              <PopoverContent className="w-64 xs:w-72 sm:w-80 md:w-80 lg:w-96 border-4 border-orange-500 p-3 xs:p-4 sm:p-5 md:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+                <div className="grid grid-cols-6 gap-1.5 xs:gap-2 sm:gap-2 md:gap-3">
                   {[
                     "#FFFFFF",
                     "#FF0000",
@@ -259,86 +282,109 @@ export default function BlackboardAI() {
                   ].map((c) => (
                     <button
                       key={c}
-                      className="w-8 h-8 rounded-full border border-gray-600"
-                      style={{ backgroundColor: c }}
-                      onClick={() => setColor(c)}
+                      className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 border-[3px] border-orange-500 transition-all duration-100 cursor-pointer"
+                      style={{ 
+                        backgroundColor: c,
+                        boxShadow: "0 4px 0 0 rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.5)",
+                        transform: color === c ? "translateY(2px)" : "translateY(0px)",
+                      }}
+                      onClick={() => handleColorSelect(c)}
                     />
                   ))}
                 </div>
               </PopoverContent>
             </Popover>
 
-            <Button variant="outline" onClick={clearCanvas} className="flex-1 min-w-[100px] max-w-[150px] rounded-xl" size="sm">
-              <Trash2 className="h-4 w-4 mr-1" />
-              Clear
+            <Button 
+              onClick={clearCanvas} 
+              className="h-auto flex flex-col items-center justify-center gap-0.5 xs:gap-1 sm:gap-1.5 relative btn-orange-outline"
+              title="Clear Canvas"
+            >
+              <Trash2 className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+              <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">CLEAR</span>
             </Button>
 
-            <Button variant="outline" onClick={downloadImage} className="flex-1 min-w-[100px] max-w-[150px] rounded-xl" size="sm">
-              <Download className="h-4 w-4 mr-1" />
-              Save
+            <Button 
+              onClick={downloadImage} 
+              className="h-auto flex flex-col items-center justify-center gap-0.5 xs:gap-1 sm:gap-1.5 relative btn-orange-outline"
+              title="Download Image"
+            >
+              <Download className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+              <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">SAVE</span>
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 px-2">
-            <span className="text-sm whitespace-nowrap min-w-[80px]">
-              {tool === "pencil" ? "Pencil" : "Eraser"} Size:
-            </span>
-            <Slider
-              min={1}
-              max={tool === "eraser" ? 50 : 20}
-              step={1}
-              value={[tool === "pencil" ? pencilSize : eraserSize]}
-              onValueChange={(value) => (tool === "pencil" ? setPencilSize(value[0]) : setEraserSize(value[0]))}
-              className="flex-1"
-            />
-            <span className="text-sm w-8 text-center">{tool === "pencil" ? pencilSize : eraserSize}</span>
+          {/* Size Control */}
+          <div className="border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 xs:gap-2.5 sm:gap-3 md:gap-4 lg:gap-6">
+              <span className="font-black text-orange-500 text-xs xs:text-xs sm:text-xs md:text-sm lg:text-base tracking-widest whitespace-nowrap">
+                SIZE: {tool === "pencil" ? "PEN" : "ERASE"}
+              </span>
+              <Slider
+                min={1}
+                max={tool === "eraser" ? 50 : 20}
+                step={1}
+                value={[tool === "pencil" ? pencilSize : eraserSize]}
+                onValueChange={(value) => (tool === "pencil" ? setPencilSize(value[0]) : setEraserSize(value[0]))}
+                className="flex-1 w-full"
+              />
+              <span className="font-black text-orange-500 text-xs xs:text-xs sm:text-xs md:text-sm lg:text-base tracking-widest w-10 xs:w-11 sm:w-12 md:w-12 lg:w-14 text-center border-[3px] border-orange-500 py-0.5 xs:py-1 sm:py-1 md:py-1.5 lg:py-2" style={{ backgroundColor: '#0a0a0a' }}>
+                {tool === "pencil" ? pencilSize : eraserSize}
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="w-full aspect-[4/3] max-w-3xl">
+        {/* Canvas */}
+        <div className="w-full aspect-[4/3] max-w-6xl">
           <canvas
             ref={canvasRef}
-            className="w-full h-full border border-gray-600 rounded-3xl cursor-crosshair touch-none"
+            className="canvas-border w-full h-full"
             onMouseDown={(e) => startDrawing(e.clientX, e.clientY)}
             onMouseUp={stopDrawing}
             onMouseOut={stopDrawing}
             onMouseMove={(e) => draw(e.clientX, e.clientY)}
             onTouchStart={(e) => {
-              e.preventDefault()
               startDrawing(e.touches[0].clientX, e.touches[0].clientY)
             }}
-            onTouchEnd={(e) => {
-              e.preventDefault()
+            onTouchEnd={() => {
               stopDrawing()
             }}
             onTouchMove={(e) => {
-              e.preventDefault()
               draw(e.touches[0].clientX, e.touches[0].clientY)
             }}
           />
         </div>
 
-        <Button onClick={analyzeImage} className="w-full max-w-[200px] mt-4 rounded-xl" size="lg" disabled={isAnalyzing}>
-          <Send className="h-5 w-5 mr-2" />
-          {isAnalyzing ? "Analyzing..." : "Analyze Drawing"}
+        {/* Analyze Button */}
+        <Button
+          onClick={analyzeImage}
+          className="w-full max-w-3xl btn-orange-solid py-4 xs:py-5 sm:py-6 md:py-7 lg:py-8 px-4 xs:px-5 sm:px-6 md:px-8 lg:px-10 mb-4 xs:mb-5 sm:mb-6 md:mb-7 lg:mb-8 flex flex-col items-center gap-1 xs:gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3"
+          disabled={isAnalyzing}
+        >
+          <Send className="h-5 w-5 xs:h-5.5 xs:w-5.5 sm:h-6 sm:w-6 md:h-6 md:w-6 lg:h-7 lg:w-7" />
+          <span className="tracking-widest font-black text-xs xs:text-xs sm:text-sm md:text-base lg:text-lg">
+            {isAnalyzing ? "ANALYZING..." : "ANALYZE"}
+          </span>
         </Button>
 
+        {/* Error Alert */}
         {error && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertDescription>{error}</AlertDescription>
+          <Alert variant="destructive" className="w-full border-4 border-red-600 mb-3 xs:mb-4 sm:mb-5 md:mb-6" style={{ backgroundColor: '#0a0a0a' }}>
+            <AlertDescription className="text-red-500 font-black text-xs xs:text-xs sm:text-sm md:text-base">{error}</AlertDescription>
           </Alert>
         )}
 
+        {/* Result */}
         {result && (
-          <div className="w-full p-4 bg-gray-800 rounded-2xl mt-4">
-            <h2 className="text-xl font-semibold mb-2">ChalkX:</h2>
+          <div className="w-full border-4 border-orange-500 p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8" style={{ backgroundColor: '#0a0a0a' }}>
+            <h2 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-black text-orange-500 mb-2 xs:mb-3 sm:mb-3 md:mb-4 lg:mb-4 tracking-widest">RESULT</h2>
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
                 {result}
               </ReactMarkdown>
             </div>
           </div>
-
         )}
       </div>
     </div>
