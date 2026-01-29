@@ -378,10 +378,10 @@ export default function BlackboardAI() {
         {/* Result */}
         {result && (
           <div className="w-full max-w-4xl bg-black border-4 border-orange-500 p-3 xs:p-3.5 sm:p-4 md:p-5">
-            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-2xl font-black text-orange-500 mb-2 tracking-widest">
+            <h2 className="text-base xs:text-lg sm:text-xl md:text-xl font-black text-orange-500 mb-2 tracking-widest">
               ChalkX
             </h2>
-            <div className="prose prose-invert max-w-none" style={{ fontSize: "110%" }}>
+            <div className="prose prose-invert max-w-none" style={{ fontSize: "88%" }}>
               <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
                 {result}
               </ReactMarkdown>
