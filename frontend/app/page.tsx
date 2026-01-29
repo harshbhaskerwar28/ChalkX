@@ -210,7 +210,7 @@ export default function BlackboardAI() {
   }
 
   return (
-    <div className="min-h-screen text-white p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-x-hidden" style={{ backgroundColor: '#121212' }} ref={containerRef}>
+    <div className="min-h-screen bg-black text-white p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col items-center overflow-x-hidden" ref={containerRef}>
       <div className="w-full max-w-6xl flex flex-col items-center gap-3 xs:gap-4 sm:gap-5 md:gap-6 lg:gap-8">
         {/* Header */}
         <div className="text-center mt-3 xs:mt-4 sm:mt-5 md:mt-6 lg:mt-8 w-full">
@@ -221,7 +221,7 @@ export default function BlackboardAI() {
         </div>
 
         {/* Toolbar */}
-        <div className="w-full border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+        <div className="w-full bg-black border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6">
           {/* Main Controls */}
           <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-1 xs:gap-2 sm:gap-2 md:gap-3 lg:gap-4 mb-3 xs:mb-4 sm:mb-5 md:mb-6">
             <Button
@@ -264,7 +264,7 @@ export default function BlackboardAI() {
                   <span className="text-xs xs:text-xs sm:text-xs md:text-sm lg:text-sm whitespace-nowrap">COLOR</span>
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-64 xs:w-72 sm:w-80 md:w-80 lg:w-96 border-4 border-orange-500 p-3 xs:p-4 sm:p-5 md:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+              <PopoverContent className="w-64 xs:w-72 sm:w-80 md:w-80 lg:w-96 bg-black border-4 border-orange-500 p-3 xs:p-4 sm:p-5 md:p-6">
                 <div className="grid grid-cols-6 gap-1.5 xs:gap-2 sm:gap-2 md:gap-3">
                   {[
                     "#FFFFFF",
@@ -315,7 +315,7 @@ export default function BlackboardAI() {
           </div>
 
           {/* Size Control */}
-          <div className="border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6" style={{ backgroundColor: '#0a0a0a' }}>
+          <div className="bg-black border-4 border-orange-500 p-2 xs:p-3 sm:p-4 md:p-5 lg:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 xs:gap-2.5 sm:gap-3 md:gap-4 lg:gap-6">
               <span className="font-black text-orange-500 text-xs xs:text-xs sm:text-xs md:text-sm lg:text-base tracking-widest whitespace-nowrap">
                 SIZE: {tool === "pencil" ? "PEN" : "ERASE"}
@@ -328,7 +328,7 @@ export default function BlackboardAI() {
                 onValueChange={(value) => (tool === "pencil" ? setPencilSize(value[0]) : setEraserSize(value[0]))}
                 className="flex-1 w-full"
               />
-              <span className="font-black text-orange-500 text-xs xs:text-xs sm:text-xs md:text-sm lg:text-base tracking-widest w-10 xs:w-11 sm:w-12 md:w-12 lg:w-14 text-center border-[3px] border-orange-500 py-0.5 xs:py-1 sm:py-1 md:py-1.5 lg:py-2" style={{ backgroundColor: '#0a0a0a' }}>
+              <span className="font-black text-orange-500 text-xs xs:text-xs sm:text-xs md:text-sm lg:text-base tracking-widest w-10 xs:w-11 sm:w-12 md:w-12 lg:w-14 text-center border-[3px] border-orange-500 bg-black py-0.5 xs:py-1 sm:py-1 md:py-1.5 lg:py-2">
                 {tool === "pencil" ? pencilSize : eraserSize}
               </span>
             </div>
@@ -370,16 +370,18 @@ export default function BlackboardAI() {
 
         {/* Error Alert */}
         {error && (
-          <Alert variant="destructive" className="w-full border-4 border-red-600 mb-3 xs:mb-4 sm:mb-5 md:mb-6" style={{ backgroundColor: '#0a0a0a' }}>
+          <Alert variant="destructive" className="w-full border-4 border-red-600 bg-black mb-3 xs:mb-4 sm:mb-5 md:mb-6">
             <AlertDescription className="text-red-500 font-black text-xs xs:text-xs sm:text-sm md:text-base">{error}</AlertDescription>
           </Alert>
         )}
 
         {/* Result */}
         {result && (
-          <div className="w-full border-4 border-orange-500 p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8" style={{ backgroundColor: '#0a0a0a' }}>
-            <h2 className="text-xl xs:text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-black text-orange-500 mb-2 xs:mb-3 sm:mb-3 md:mb-4 lg:mb-4 tracking-widest">RESULT</h2>
-            <div className="prose prose-invert max-w-none">
+          <div className="w-full max-w-4xl bg-black border-4 border-orange-500 p-3 xs:p-3.5 sm:p-4 md:p-5">
+            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-2xl font-black text-orange-500 mb-2 tracking-widest">
+              ChalkX
+            </h2>
+            <div className="prose prose-invert max-w-none" style={{ fontSize: "110%" }}>
               <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
                 {result}
               </ReactMarkdown>
